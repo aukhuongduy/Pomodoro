@@ -1,16 +1,25 @@
 package com.example.tranh.pomodoro.activities;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.tranh.pomodoro.R;
+import com.example.tranh.pomodoro.settings.LoginCredentials;
+import com.example.tranh.pomodoro.settings.SharedPrefs;
+import com.google.gson.Gson;
+
+import java.security.PrivateKey;
 
 public class LoginActivity extends AppCompatActivity {
 
+    private  static final String TAG = LoginActivity.class.toString();
     private EditText etUserName;
     private EditText etPassWord;
     private Button btRegister;
@@ -19,6 +28,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        skipLoginIsPossible();
         setContentView(R.layout.activity_login);
         etUserName = (EditText) this.findViewById(R.id.et_username);
         etPassWord = (EditText) this.findViewById(R.id.et_password);
@@ -36,7 +46,16 @@ public class LoginActivity extends AppCompatActivity {
                 attemptRegister();
             }
         });
+        SharedPrefs sharedPrefs = new SharedPrefs(this);
+        sharedPrefs.put(new LoginCredentials("admin","admin",false));
+        Log.d(TAG, String.format("onCreate: %s", sharedPrefs.getLoginCredentials().toString()));
+
     }
+
+    private void skipLoginIsPossible() {
+        if(SharedPrefs.getInstance().getLoginCredentials() != null )goToActivity();
+    }
+
 
     private void attemptRegister() {
         String userName = etUserName.getText().toString();
@@ -64,13 +83,23 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void attemptLogin() {
-        String userName = String.valueOf(etUserName.getText());
-        String passWord = etPassWord.getText().toString();
-        if (userName.equals("admin") && passWord.equals("admin")) {
+        String username = String.valueOf(etUserName.getText());
+        String password = etPassWord.getText().toString();
+
+
+        if (username.equals("admin") && password.equals("admin")) {
             //Notifiaction
+            SharedPrefs.getInstance().put(new LoginCredentials(username,password,false));
             Toast.makeText(this, "Logged in", Toast.LENGTH_SHORT).show();
+
+            goToActivity();
         } else {
             Toast.makeText(this, "Login failed", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void goToActivity() {
+        Intent intent = new Intent(this, TaskActivity.class);
+        startActivity(intent);
     }
 }
