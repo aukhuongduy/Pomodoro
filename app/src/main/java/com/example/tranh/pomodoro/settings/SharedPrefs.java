@@ -6,6 +6,8 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 
+import static android.content.ContentValues.TAG;
+
 /**
  * Created by Khuong Duy on 1/14/2017.
  */
@@ -13,13 +15,15 @@ import com.google.gson.Gson;
 public class SharedPrefs {
     private static final String SHARED_PRESS_NAME = "SP";
     private static final String LOGIN_KEY = "login";
+    private static final String SETTING_CASE = "setting";
 
-    private  static  SharedPrefs instance;
+    private static SharedPrefs instance;
 
     public static SharedPrefs getInstance() {
         return instance;
     }
-    public static void init(Context context){
+
+    public static void init(Context context) {
         instance = new SharedPrefs(context);
     }
 
@@ -36,6 +40,23 @@ public class SharedPrefs {
         this.sharedPreferences.edit().putString(LOGIN_KEY, json).commit();
     }
 
+    public void put(SettingCredentials settingCredentials) {
+        String json = gson.toJson(settingCredentials);
+        this.sharedPreferences.edit().putString(SETTING_CASE, json).commit();
+    }
+
+    public SettingCredentials getSettingCredentials(){
+        SettingCredentials  settingCredentials;
+        String settingJSON = this.sharedPreferences.getString(SETTING_CASE,null);
+        if(settingJSON == null){
+            return null;
+        }else{
+            settingCredentials = gson.fromJson(settingJSON,SettingCredentials.class);
+        }
+        Log.d(TAG, "count = " + settingCredentials.getCountToLongBreak());
+        return settingCredentials;
+    }
+
     public LoginCredentials getLoginCredentials() {
         LoginCredentials loginCredentials;
         String loginJSON = this.sharedPreferences.getString(LOGIN_KEY, null);
@@ -46,5 +67,6 @@ public class SharedPrefs {
         }
         return loginCredentials;
     }
+
 
 }

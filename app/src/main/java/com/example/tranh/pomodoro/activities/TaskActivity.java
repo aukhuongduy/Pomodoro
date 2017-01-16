@@ -1,5 +1,6 @@
 package com.example.tranh.pomodoro.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -58,6 +59,7 @@ public class TaskActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.task, menu);
+
         return true;
     }
 
@@ -70,6 +72,7 @@ public class TaskActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            goSetting();
             return true;
         }
 
@@ -99,5 +102,9 @@ public class TaskActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+    public void goSetting(){
+        Intent intent = new Intent(this, SettingActivity.class);
+        startActivity(intent);
     }
 }
