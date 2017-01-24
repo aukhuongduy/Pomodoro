@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.tranh.pomodoro">
-
+    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
     <application
         android:name="com.example.PomodoroApplication"
         android:allowBackup="true"
@@ -23,7 +23,7 @@
         <activity
             android:name=".activities.SettingActivity"
             android:label="@string/title_activity_setting"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            ></activity>
     </application>
 
 </manifest>
