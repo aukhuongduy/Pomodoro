@@ -3,16 +3,16 @@ package com.example.network.jsonmodels;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Created by Khuong Duy on 1/18/2017.
+ * Created by Khuong Duy on 1/25/2017.
  */
 
-public class LoginBodyJson {
+public class RegisterBodyJson {
     @SerializedName("username")
     private String username;
     @SerializedName("password")
     private String password;
 
-    public LoginBodyJson(String username, String password) {
+    public RegisterBodyJson(String username, String password) {
         this.username = username;
         this.password = password;
     }
@@ -33,11 +33,6 @@ public class LoginBodyJson {
         this.password = password;
     }
 
-    @Override
-    public String toString() {
-        return "LoginBodyJson{" +
-                "username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                '}';
-    }
+
+
 }
