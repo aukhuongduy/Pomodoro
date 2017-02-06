@@ -7,12 +7,14 @@ package com.example.tranh.pomodoro.settings;
 public class LoginCredentials {
     private String username;
     private  String password;
+    private String accessToken;
     boolean remember;
 
-    public LoginCredentials(String username, String password, boolean remember) {
+    public LoginCredentials(String username, String password,String accessToken, boolean remember) {
         this.username = username;
         this.password = password;
         this.remember = remember;
+        this.accessToken = accessToken;
     }
 
     public String getUsername() {
@@ -31,11 +33,16 @@ public class LoginCredentials {
         this.password = password;
     }
 
+    public String getAccessToken() {
+        return accessToken;
+    }
+
     @Override
     public String toString() {
         return "LoginCredentials{" +
                 "username='" + username + '\'' +
                 ", password='" + password + '\'' +
+                ", accessToken='" + accessToken + '\'' +
                 ", remember=" + remember +
                 '}';
     }
