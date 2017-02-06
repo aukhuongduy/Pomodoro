@@ -13,7 +13,7 @@
             android:name=".activities.TaskActivity"
             android:label="@string/title_activity_task"
             android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".activities.LoginActivity" android:theme="@style/AppTheme.NoActionBar" android:windowSoftInputMode="adjustPan|adjustResize">
+        <activity android:name=".activities.LoginActivity" android:theme="@style/AppTheme.NoActionBar" android:windowSoftInputMode="stateVisible|adjustResize" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
