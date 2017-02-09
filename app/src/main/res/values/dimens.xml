@@ -12,4 +12,8 @@
     <dimen name="defaultPadding">16dp</dimen>
     <dimen name="defaultMarginLeftRight">16dp</dimen>
     <dimen name="DefaultMarginTopBottom">6dp</dimen>
+    <dimen name="list_item_height">64dp</dimen>
+    <dimen name="view_inter_space">16dp</dimen>
+    <dimen name="imageButtonWH">48dp</dimen>
+
 </resources>

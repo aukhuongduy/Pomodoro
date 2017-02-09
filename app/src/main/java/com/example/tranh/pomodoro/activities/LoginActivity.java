@@ -29,6 +29,8 @@ import com.google.gson.Gson;
 
 import java.security.PrivateKey;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -40,10 +42,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class LoginActivity extends AppCompatActivity {
 
     private static final String TAG = LoginActivity.class.toString();
-    private EditText etUserName;
-    private EditText etPassWord;
-    private Button btRegister;
-    private Button btLogin;
+    @BindView(R.id.et_username) EditText etUserName;
+    @BindView(R.id.et_password) EditText etPassWord;
+    @BindView(R.id.bt_register) Button btRegister;
+    @BindView(R.id.bt_login) Button btLogin;
     private Retrofit retrofit;
     private String username;
     private String password;
@@ -53,13 +55,11 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        skipLoginIsPossible();
+        skipLoginIsPossible();
         setContentView(R.layout.activity_login);
         progressDialog = new ProgressDialog(this);
-        etUserName = (EditText) this.findViewById(R.id.et_username);
-        etPassWord = (EditText) this.findViewById(R.id.et_password);
-        btLogin = (Button) this.findViewById(R.id.bt_login);
-        btRegister = (Button) this.findViewById(R.id.bt_register);
+        ButterKnife.bind(this);
+
         etPassWord.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {

@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -15,9 +17,18 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.tranh.pomodoro.R;
+import com.example.tranh.pomodoro.adapters.TaskAdapter;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class TaskActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    @BindView(R.id.rv_task)
+    RecyclerView rvTask;
+
+    private TaskAdapter taskAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +54,18 @@ public class TaskActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        setUI();
+
+    }
+
+    private void setUI() {
+        ButterKnife.bind(this);
+        taskAdapter = new TaskAdapter();
+
+        rvTask.setAdapter(taskAdapter);
+        rvTask.setLayoutManager(new LinearLayoutManager(this));
+
     }
 
     @Override
