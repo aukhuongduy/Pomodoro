@@ -1,6 +1,7 @@
 package com.example.tranh.pomodoro.activities;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -15,6 +16,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.widget.FrameLayout;
 
 import com.example.tranh.pomodoro.R;
 import com.example.tranh.pomodoro.adapters.TaskAdapter;
@@ -27,6 +31,8 @@ public class TaskActivity extends AppCompatActivity
 
     @BindView(R.id.rv_task)
     RecyclerView rvTask;
+    @BindView(R.id.frame_layout)
+    FrameLayout flColors;
 
     private TaskAdapter taskAdapter;
 
@@ -97,9 +103,22 @@ public class TaskActivity extends AppCompatActivity
         if (id == R.id.action_settings) {
             goSetting();
             return true;
+        }else if(id == R.id.action_color){
+            startChooseColor();
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void startChooseColor() {
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+
+        ChooseColor chooseColor = new ChooseColor();
+
+        fragmentTransaction.replace(R.id.frame_layout, chooseColor);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+
     }
 
     @SuppressWarnings("StatementWithEmptyBody")

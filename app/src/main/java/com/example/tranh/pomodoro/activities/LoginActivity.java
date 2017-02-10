@@ -4,8 +4,12 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.provider.MediaStore;
+import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -42,10 +46,13 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class LoginActivity extends AppCompatActivity {
 
     private static final String TAG = LoginActivity.class.toString();
-    @BindView(R.id.et_username) EditText etUserName;
+    @BindView(R.id.et_username)
+    EditText etUserName;
     @BindView(R.id.et_password) EditText etPassWord;
     @BindView(R.id.bt_register) Button btRegister;
     @BindView(R.id.bt_login) Button btLogin;
+    @BindView(R.id.text_input_layout) TextInputLayout tilUsername;
+    @BindView(R.id.text_input_layout2) TextInputLayout tilPassword;
     private Retrofit retrofit;
     private String username;
     private String password;
@@ -59,6 +66,51 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         progressDialog = new ProgressDialog(this);
         ButterKnife.bind(this);
+
+
+
+        etUserName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(etUserName.getText().length()<=0){
+                    tilUsername.setError("Username cannot be blank!");
+                }else{
+                    tilUsername.setError(null);
+                }
+            }
+        });
+        etPassWord.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(etPassWord.getText().length()<=0){
+                    tilPassword.setError("Your password can not be blank");
+                }else if(etPassWord.getText().length()<6){
+                    tilPassword.setError("Your passsword must be longer 5 character");
+                }else{
+                    tilPassword.setError(null);
+                }
+            }
+        });
 
         etPassWord.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -81,6 +133,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 attemptRegister();
+
             }
         });
         SharedPrefs sharedPrefs = new SharedPrefs(this);
@@ -208,10 +261,40 @@ public class LoginActivity extends AppCompatActivity {
 
 
     private void attemptRegister() {
-        username = etUserName.getText().toString();
-        password = etPassWord.getText().toString();
-        sendRegister();
-        getLoadingScreen();
+        if(isAcceptLogin()){
+            username = etUserName.getText().toString();
+            password = etPassWord.getText().toString();
+            sendRegister();
+            getLoadingScreen();
+        }else{
+            setError();
+        }
+
+    }
+
+    private void setError() {
+        if(etPassWord.getText().length()<=0){
+            tilPassword.setError("Your password can not be blank");
+        }else if(etPassWord.getText().length()<6){
+            tilPassword.setError("Your passsword must be longer 5 character");
+        }else{
+            tilPassword.setError(null);
+        }
+
+        if(etUserName.getText().length()<=0){
+            tilUsername.setError("Username cannot be blank!");
+        }else{
+            tilUsername.setError(null);
+        }
+    }
+
+
+    private boolean isAcceptLogin() {
+        if(etUserName.getText().length()>0 && etPassWord.getText().length()>=6){
+            return true;
+        }else{
+            return false;
+        }
     }
 
 
@@ -225,18 +308,16 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void attemptLogin() {
-        username = String.valueOf(etUserName.getText());
-        password = etPassWord.getText().toString();
-        sendLogin(username, password);
-        getLoadingScreen();
+        if(isAcceptLogin()){
+            username = String.valueOf(etUserName.getText());
+            password = etPassWord.getText().toString();
+            sendLogin(username, password);
+            getLoadingScreen();
+        }else{
+            setError();
+        }
 
 
-//        if (username.equals("admin") && password.equals("admin")) {
-//            //Notifiaction
-//
-//        } else {
-//            Toast.makeText(this, "Login failed", Toast.LENGTH_SHORT).show();
-//        }
     }
 
     private void getLoadingScreen() {
