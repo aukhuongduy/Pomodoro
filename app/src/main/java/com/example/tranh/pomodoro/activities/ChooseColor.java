@@ -35,7 +35,6 @@ public class ChooseColor extends Fragment {
 
         View view  = inflater.inflate(R.layout.fragment_blank, container, false);
         setUI(view);
-
         return view;
     }
 

@@ -62,6 +62,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG, String.format("onCreate: %s",SharedPrefs.getInstance().getLoginCredentials().toString() ));
         skipLoginIsPossible();
         setContentView(R.layout.activity_login);
         progressDialog = new ProgressDialog(this);
@@ -185,10 +186,10 @@ public class LoginActivity extends AppCompatActivity {
 
                 } else {
                     if (response.code() == 200) {
-
+                        Log.d(TAG, "onResponse: ok vao");
                         progressDialog.hide();
                         progressDialog.dismiss();
-                        token = SharedPrefs.getInstance().getAccessToken();
+                        token = loginResponeJson.getAccessToken();
                         Log.d(TAG, String.format("onResponse: %s", token));
                         onLoginSuccess();
                     }
@@ -250,7 +251,6 @@ public class LoginActivity extends AppCompatActivity {
     private void onLoginSuccess() {
         SharedPrefs.getInstance().put(new LoginCredentials(username, password,token, false));
         Toast.makeText(this, "Logged in", Toast.LENGTH_SHORT).show();
-//
         goToActivity();
     }
 

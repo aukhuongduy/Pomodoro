@@ -2,11 +2,15 @@ package com.example.tranh.pomodoro.activities;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -22,19 +26,23 @@ import android.widget.FrameLayout;
 
 import com.example.tranh.pomodoro.R;
 import com.example.tranh.pomodoro.adapters.TaskAdapter;
+import com.example.tranh.pomodoro.fragment.TaskDetailFragment;
+import com.example.tranh.pomodoro.fragment.TaskFragment;
 
+import butterknife.BindDrawable;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class TaskActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    @BindView(R.id.rv_task)
-    RecyclerView rvTask;
-    @BindView(R.id.frame_layout)
-    FrameLayout flColors;
-
+    private static final String TAG = "TaskActivity";
+    @BindDrawable(R.drawable.ic_arrow_back_white_24dp)
+    Drawable drawableback;
     private TaskAdapter taskAdapter;
+
+    ActionBarDrawerToggle toggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,35 +52,62 @@ public class TaskActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//            }
+//        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+        toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
+        getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+            @Override
+            public void onBackStackChanged() {
+                if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+                    toggle.setDrawerIndicatorEnabled(false);
+                    toggle.setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp);
+                    toggle.setToolbarNavigationClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            onBackPressed();
+                        }
+                    });
+                } else {
+                    toggle.setDrawerIndicatorEnabled(true);
+                    toggle.setToolbarNavigationClickListener(null);
+                }
+            }
+        });
+
+
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        setUI();
+//        setUI();
 
-    }
 
-    private void setUI() {
         ButterKnife.bind(this);
-        taskAdapter = new TaskAdapter();
 
-        rvTask.setAdapter(taskAdapter);
-        rvTask.setLayoutManager(new LinearLayoutManager(this));
-
+        transactionFragment(new TaskFragment(), false);
     }
+
+    public void transactionFragment(Fragment fragment, boolean addtobackstack) {
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.setCustomAnimations(R.anim.enter,R.anim.exit,R.anim.pop_enter,R.anim.pop_exit);
+        if (addtobackstack) {
+            ft.replace(R.id.fl_main, fragment).addToBackStack(null).commit();
+        } else {
+            ft.replace(R.id.fl_main, fragment).commit();
+        }
+    }
+
 
     @Override
     public void onBackPressed() {
@@ -82,12 +117,13 @@ public class TaskActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
+
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.task, menu);
+//        getMenuInflater().inflate(R.menu.task, menu);
 
         return true;
     }
@@ -103,7 +139,7 @@ public class TaskActivity extends AppCompatActivity
         if (id == R.id.action_settings) {
             goSetting();
             return true;
-        }else if(id == R.id.action_color){
+        } else if (id == R.id.action_color) {
             startChooseColor();
         }
 
@@ -145,8 +181,10 @@ public class TaskActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-    public void goSetting(){
+
+    public void goSetting() {
         Intent intent = new Intent(this, SettingActivity.class);
         startActivity(intent);
     }
+
 }
