@@ -43,8 +43,6 @@ public class TaskDetailFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_task_detail, container, false);
         setUI(view);
-
-
         return view;
     }
 

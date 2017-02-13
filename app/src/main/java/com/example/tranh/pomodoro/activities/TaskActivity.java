@@ -26,6 +26,7 @@ import android.widget.FrameLayout;
 
 import com.example.tranh.pomodoro.R;
 import com.example.tranh.pomodoro.adapters.TaskAdapter;
+import com.example.tranh.pomodoro.fragment.FragmentListener;
 import com.example.tranh.pomodoro.fragment.ManagerFragment;
 import com.example.tranh.pomodoro.fragment.TaskDetailFragment;
 import com.example.tranh.pomodoro.fragment.TaskFragment;
@@ -36,7 +37,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class TaskActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener,FragmentListener{
 
     private static final String TAG = "TaskActivity";
     @BindDrawable(R.drawable.ic_arrow_back_white_24dp)
@@ -94,7 +95,7 @@ public class TaskActivity extends AppCompatActivity
 
 
         ButterKnife.bind(this);
-        new ManagerFragment(getSupportFragmentManager(),R.id.fl_main).replaceFragment(new TaskFragment(),false);
+        replaceFragment(new TaskFragment(),false);
     }
 
     public void transactionFragment(Fragment fragment, boolean addtobackstack) {
@@ -187,4 +188,9 @@ public class TaskActivity extends AppCompatActivity
         startActivity(intent);
     }
 
+
+    @Override
+    public void replaceFragment(Fragment fragment, boolean addToBackStack) {
+        new ManagerFragment(getSupportFragmentManager(),R.id.fl_main).replaceFragment(new TaskFragment(),addToBackStack);
+    }
 }
