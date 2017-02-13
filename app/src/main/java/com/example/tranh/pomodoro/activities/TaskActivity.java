@@ -26,6 +26,7 @@ import android.widget.FrameLayout;
 
 import com.example.tranh.pomodoro.R;
 import com.example.tranh.pomodoro.adapters.TaskAdapter;
+import com.example.tranh.pomodoro.fragment.ManagerFragment;
 import com.example.tranh.pomodoro.fragment.TaskDetailFragment;
 import com.example.tranh.pomodoro.fragment.TaskFragment;
 
@@ -93,8 +94,7 @@ public class TaskActivity extends AppCompatActivity
 
 
         ButterKnife.bind(this);
-
-        transactionFragment(new TaskFragment(), false);
+        new ManagerFragment(getSupportFragmentManager(),R.id.fl_main).replaceFragment(new TaskFragment(),false);
     }
 
     public void transactionFragment(Fragment fragment, boolean addtobackstack) {

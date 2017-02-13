@@ -62,7 +62,9 @@ public class TaskFragment extends Fragment {
     @OnClick(R.id.fab)
     void onFabClick(){
         TaskDetailFragment taskDetailFragment = new TaskDetailFragment();
-        ((TaskActivity)getActivity()).transactionFragment(taskDetailFragment,true);
+        ManagerFragment mf = new ManagerFragment(this.getActivity().getSupportFragmentManager(),R.id.fl_main);
+        mf.getFragmentTransaction().setCustomAnimations(R.anim.enter,R.anim.exit,R.anim.pop_enter,R.anim.pop_exit);
+        mf.replaceFragment(taskDetailFragment,true);
     }
 
 }
