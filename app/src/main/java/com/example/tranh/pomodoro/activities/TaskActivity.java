@@ -27,7 +27,8 @@ import android.widget.FrameLayout;
 import com.example.tranh.pomodoro.R;
 import com.example.tranh.pomodoro.adapters.TaskAdapter;
 import com.example.tranh.pomodoro.fragment.FragmentListener;
-import com.example.tranh.pomodoro.fragment.ManagerFragment;
+import com.example.tranh.pomodoro.fragment.FragmentTaskDetailListener;
+import com.example.tranh.pomodoro.fragment.FragmentTaskListener;
 import com.example.tranh.pomodoro.fragment.TaskDetailFragment;
 import com.example.tranh.pomodoro.fragment.TaskFragment;
 
@@ -37,12 +38,15 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class TaskActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,FragmentListener{
+        implements NavigationView.OnNavigationItemSelectedListener, FragmentListener, FragmentTaskDetailListener, FragmentTaskListener {
 
     private static final String TAG = "TaskActivity";
     @BindDrawable(R.drawable.ic_arrow_back_white_24dp)
     Drawable drawableback;
+
+
     private TaskAdapter taskAdapter;
+
 
     ActionBarDrawerToggle toggle;
 
@@ -95,13 +99,13 @@ public class TaskActivity extends AppCompatActivity
 
 
         ButterKnife.bind(this);
-        replaceFragment(new TaskFragment(),false);
+        onReplaceTaskListener();
     }
 
     public void transactionFragment(Fragment fragment, boolean addtobackstack) {
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
-        ft.setCustomAnimations(R.anim.enter,R.anim.exit,R.anim.pop_enter,R.anim.pop_exit);
+        ft.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
         if (addtobackstack) {
             ft.replace(R.id.fl_main, fragment).addToBackStack(null).commit();
         } else {
@@ -190,7 +194,26 @@ public class TaskActivity extends AppCompatActivity
 
 
     @Override
-    public void replaceFragment(Fragment fragment, boolean addToBackStack) {
-        new ManagerFragment(getSupportFragmentManager(),R.id.fl_main).replaceFragment(new TaskFragment(),addToBackStack);
+    public void replaceFragment(Fragment fragment, boolean addToBackStack, boolean useanimation) {
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        if(useanimation){
+            ft.setCustomAnimations(R.anim.enter,R.anim.exit,R.anim.pop_enter,R.anim.pop_exit);
+        }
+        if(addToBackStack){
+            ft.replace(R.id.fl_main,fragment).addToBackStack(null).commit();
+        }else{
+            ft.replace(R.id.fl_main,fragment).commit();
+        }
+    }
+
+    @Override
+    public void onReplaceTaskDetailListener() {
+        replaceFragment(new TaskDetailFragment(), true,true);
+    }
+
+    @Override
+    public void onReplaceTaskListener() {
+        replaceFragment(new TaskFragment(), false,true);
     }
 }

@@ -1,6 +1,7 @@
 package com.example.tranh.pomodoro.fragment;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -24,10 +25,19 @@ import butterknife.OnClick;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class TaskFragment extends Fragment implements FragmentListener{
+public class TaskFragment extends Fragment {
 
     @BindView(R.id.rv_task)
     RecyclerView rvTask;
+
+    FragmentTaskDetailListener fragmentTaskDetailListener;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        fragmentTaskDetailListener = (FragmentTaskDetailListener) context;
+
+    }
 
     private TaskAdapter taskAdapter;
 
@@ -35,6 +45,7 @@ public class TaskFragment extends Fragment implements FragmentListener{
 
         // Required empty public constructor
     }
+
 
 
     @Override
@@ -61,14 +72,10 @@ public class TaskFragment extends Fragment implements FragmentListener{
     }
     @OnClick(R.id.fab)
     void onFabClick(){
-        TaskDetailFragment taskDetailFragment = new TaskDetailFragment();
-        replaceFragment(new TaskDetailFragment(),true);
+        replaceFragment();
     }
 
-    @Override
-    public void replaceFragment(Fragment fragment, boolean addToBackStack) {
-        ManagerFragment mf = new ManagerFragment(this.getActivity().getSupportFragmentManager(),R.id.fl_main);
-        mf.getFragmentTransaction().setCustomAnimations(R.anim.enter,R.anim.exit,R.anim.pop_enter,R.anim.pop_exit);
-        mf.replaceFragment(fragment,true);
+    public void replaceFragment() {
+        fragmentTaskDetailListener.onReplaceTaskDetailListener();
     }
 }
