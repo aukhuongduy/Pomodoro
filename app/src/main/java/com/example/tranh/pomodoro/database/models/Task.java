@@ -7,10 +7,31 @@ package com.example.tranh.pomodoro.database.models;
 public class Task {
     private String name;
     private String color;
+    private boolean isDone;
+    private float paymentPerHour;
 
-    public Task(String name, String color) {
+
+    public Task(String name, String color, boolean isDone, float paymentPerHour) {
         this.name = name;
         this.color = color;
+        this.isDone = isDone;
+        this.paymentPerHour = paymentPerHour;
+    }
+
+    public boolean isDone() {
+        return isDone;
+    }
+
+    public void setDone(boolean done) {
+        isDone = done;
+    }
+
+    public float getPaymentPerHour() {
+        return paymentPerHour;
+    }
+
+    public void setPaymentPerHour(float paymentPerHour) {
+        this.paymentPerHour = paymentPerHour;
     }
 
     public String getName() {
@@ -34,6 +55,8 @@ public class Task {
         return "Task{" +
                 "name='" + name + '\'' +
                 ", color='" + color + '\'' +
+                ", isDone=" + isDone +
+                ", paymentPerHour=" + paymentPerHour +
                 '}';
     }
 }

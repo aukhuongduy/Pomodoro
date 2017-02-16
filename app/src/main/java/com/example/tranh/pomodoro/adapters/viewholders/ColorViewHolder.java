@@ -21,18 +21,18 @@ import butterknife.ButterKnife;
  * Created by Khuong Duy on 2/10/2017.
  */
 
-public class ColorViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+public class ColorViewHolder extends RecyclerView.ViewHolder {
     private static final String TAG = "xxxxx";
     public
     @BindView(R.id.ib_item_color)
     ImageButton imageButton;
 
-    boolean isSelected = false;
+    public boolean isSelected = false;
 
     public ColorViewHolder(View itemView) {
         super(itemView);
         ButterKnife.bind(this, itemView);
-        imageButton.setOnClickListener(this);
+
     }
 
     public void bind(final Color color) {
@@ -40,9 +40,8 @@ public class ColorViewHolder extends RecyclerView.ViewHolder implements View.OnC
         drawable.setColor(android.graphics.Color.parseColor(color.getColor()));
     }
 
-    @Override
-    public void onClick(View v) {
-        if (!isSelected) {
+    public void setCheck(boolean check) {
+        if (check) {
             imageButton.setImageResource(R.drawable.ic_done_black_24px);
             imageButton.setColorFilter(android.graphics.Color.WHITE);
             isSelected = true;
@@ -50,5 +49,6 @@ public class ColorViewHolder extends RecyclerView.ViewHolder implements View.OnC
             imageButton.setColorFilter(android.graphics.Color.parseColor(DBContext.instance.allColor().get(getAdapterPosition()).getColor()));
             isSelected = false;
         }
+
     }
 }

@@ -5,23 +5,24 @@
     android:layout_height="@dimen/list_item_height"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <View
+    <ImageButton
         android:background="@drawable/shape_task_color"
-        android:id="@+id/v_task_color"
+        android:id="@+id/ib_task_color"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:layout_marginEnd="@dimen/view_inter_space"
-        android:layout_width="24dp"
-        android:layout_height="24dp" />
+        android:layout_width="32dp"
+        android:layout_height="32dp" />
     <TextView
         android:id="@+id/tv_task_name"
-        android:layout_toEndOf="@id/v_task_color"
+        android:layout_toEndOf="@id/ib_task_color"
         android:layout_centerVertical="true"
         android:layout_alignParentEnd="true"
         android:textSize="16sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
     <ImageButton
+        android:id="@+id/ib_play_task"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:background="#00000000"

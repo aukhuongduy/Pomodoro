@@ -17,14 +17,25 @@ import java.util.List;
  * Created by Khuong Duy on 2/8/2017.
  */
 
-public class TaskAdapter extends RecyclerView.Adapter<TaskViewHolder>{
+public class TaskAdapter extends RecyclerView.Adapter<TaskViewHolder> {
+
+    public interface TaskItemClickListener {
+        void onItemClick(Task task, int position);
+    }
+
+    private TaskItemClickListener taskItemClickListener;
+
+
+    public void setTaskItemClickListener(TaskItemClickListener taskItemClickListener){
+        this.taskItemClickListener = taskItemClickListener;
+    }
 
 
     @Override
     public TaskViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         //1. Create View
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        View itemView = layoutInflater.inflate(R.layout.item_task, parent,false);
+        View itemView = layoutInflater.inflate(R.layout.item_task, parent, false);
 
         //2. Create View Holder
         TaskViewHolder taskViewHolder = new TaskViewHolder(itemView);
@@ -32,10 +43,19 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskViewHolder>{
     }
 
     @Override
-    public void onBindViewHolder(TaskViewHolder holder, int position) {
-        Task task = DBContext.instance.allTask().get(position);
+    public void onBindViewHolder(TaskViewHolder holder, final int position) {
+        final Task task = DBContext.instance.allTask().get(position);
         // bind
         holder.bind(task);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (taskItemClickListener !=null){
+                    taskItemClickListener.onItemClick(task,position);
+                }
+            }
+        });
+
     }
 
     @Override

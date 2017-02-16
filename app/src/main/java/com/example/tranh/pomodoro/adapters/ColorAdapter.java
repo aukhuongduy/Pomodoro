@@ -22,6 +22,8 @@ import static android.content.ContentValues.TAG;
 
 public class ColorAdapter extends RecyclerView.Adapter<ColorViewHolder> {
 
+    private int selectedPosition;
+
     @Override
     public ColorViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
@@ -31,15 +33,51 @@ public class ColorAdapter extends RecyclerView.Adapter<ColorViewHolder> {
 
         return colorViewHolder;
     }
+    public String getSelectedColor(){
+        return DBContext.instance.allColor().get(selectedPosition).getColor();
+    }
+
+    public void setSelectedColor(String color){
+        for(int colorIndex =0; colorIndex< DBContext.instance.allColor().size();colorIndex++){
+            if(DBContext.instance.allColor().get(colorIndex).getColor().equalsIgnoreCase(color)){
+                selectedPosition =colorIndex;
+            }
+
+        }
+        notifyDataSetChanged();
+    }
 
     @Override
     public void onBindViewHolder(ColorViewHolder holder, final int position) {
         final Color  color = DBContext.instance.allColor().get(position);
         holder.bind(color);
+//        imageButton.setImageResource(R.drawable.ic_done_black_24px);
+//        imageButton.setColorFilter(android.graphics.Color.WHITE);
+//        isSelected = true;}else{
+//        imageButton.setColorFilter(android.graphics.Color.parseColor(DBContext.instance.allColor().get(getAdapterPosition()).getColor()));
+//        isSelected = false;
+
+        if(selectedPosition == position){
+            holder.setCheck(true);
+        }else{
+            holder.setCheck(false);
+        }
+
+        Log.d(TAG, "onBindViewHolder: "+position);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: item "+position);
+                selectedPosition = position;
+                notifyDataSetChanged();
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
         return DBContext.instance.allColor().size();
     }
+
+
 }

@@ -17,6 +17,10 @@ import android.view.ViewGroup;
 import com.example.tranh.pomodoro.R;
 import com.example.tranh.pomodoro.activities.TaskActivity;
 import com.example.tranh.pomodoro.adapters.TaskAdapter;
+import com.example.tranh.pomodoro.database.models.Task;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -31,6 +35,7 @@ public class TaskFragment extends Fragment {
     RecyclerView rvTask;
 
     FragmentTaskDetailListener fragmentTaskDetailListener;
+    public int position;
 
     @Override
     public void onAttach(Context context) {
@@ -46,8 +51,6 @@ public class TaskFragment extends Fragment {
         // Required empty public constructor
     }
 
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -60,6 +63,14 @@ public class TaskFragment extends Fragment {
     private void setUI(View view) {
         ButterKnife.bind(this,view);
         taskAdapter = new TaskAdapter();
+        taskAdapter.setTaskItemClickListener(new TaskAdapter.TaskItemClickListener() {
+            @Override
+            public void onItemClick(Task task, int position) {
+                replaceFragment(task, position);
+            }
+        });
+
+
 
         rvTask.setAdapter(taskAdapter);
         rvTask.setLayoutManager(new LinearLayoutManager(this.getContext()));
@@ -72,10 +83,15 @@ public class TaskFragment extends Fragment {
     }
     @OnClick(R.id.fab)
     void onFabClick(){
-        replaceFragment();
+        replaceFragment(null,-1);
     }
 
-    public void replaceFragment() {
-        fragmentTaskDetailListener.onReplaceTaskDetailListener();
+
+    public void replaceFragment(Task task, int position) {
+        this.position = position;
+        fragmentTaskDetailListener.onReplaceTaskDetailListener(task,position);
     }
+
+
+
 }

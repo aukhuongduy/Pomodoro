@@ -12,18 +12,25 @@ import java.util.List;
 
 public class DBContext {
 
+    public  ArrayList<Task> tasks = new ArrayList<>();
+
+    public DBContext() {
+        setDB();
+    }
+
+    private void setDB() {
+        tasks.add(new Task("Study RecyclerView","#F4511E",true,25));
+        tasks.add(new Task("Practice RecyclerView","#6D4C41",true,21.5f));
+        tasks.add(new Task("Practice Networking","#757575",false, 16.5f));
+        tasks.add(new Task("Doing Homework","#FFB300",false,13.7f));
+        tasks.add(new Task("Study API","#FDD835",false,64f));
+    }
+
+
     public static final DBContext instance = new DBContext();
 
     public List<Task> allTask(){
         //Create array list
-        ArrayList<Task> tasks = new ArrayList<>();
-
-        //
-        tasks.add(new Task("Study RecyclerView","#F4511E"));
-        tasks.add(new Task("Practice RecyclerView","#6D4C41"));
-        tasks.add(new Task("Practice Networking","#757575"));
-        tasks.add(new Task("Doing Homework","#FFB300"));
-        tasks.add(new Task("Study API","#FDD835"));
         return tasks;
     }
 
@@ -43,5 +50,7 @@ public class DBContext {
     }
 
 
-
+    public void addTask(Task newtask) {
+        tasks.add(newtask);
+    }
 }

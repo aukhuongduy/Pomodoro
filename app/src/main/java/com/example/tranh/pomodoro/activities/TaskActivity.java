@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -23,14 +24,19 @@ import android.view.MenuItem;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.example.tranh.pomodoro.R;
 import com.example.tranh.pomodoro.adapters.TaskAdapter;
-import com.example.tranh.pomodoro.fragment.FragmentListener;
+import com.example.tranh.pomodoro.database.models.Task;
 import com.example.tranh.pomodoro.fragment.FragmentTaskDetailListener;
 import com.example.tranh.pomodoro.fragment.FragmentTaskListener;
+import com.example.tranh.pomodoro.fragment.PomodoroFragment;
 import com.example.tranh.pomodoro.fragment.TaskDetailFragment;
 import com.example.tranh.pomodoro.fragment.TaskFragment;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import butterknife.BindDrawable;
 import butterknife.BindView;
@@ -38,7 +44,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class TaskActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, FragmentListener, FragmentTaskDetailListener, FragmentTaskListener {
+        implements NavigationView.OnNavigationItemSelectedListener, FragmentTaskDetailListener, FragmentTaskListener {
 
     private static final String TAG = "TaskActivity";
     @BindDrawable(R.drawable.ic_arrow_back_white_24dp)
@@ -193,27 +199,60 @@ public class TaskActivity extends AppCompatActivity
     }
 
 
-    @Override
     public void replaceFragment(Fragment fragment, boolean addToBackStack, boolean useanimation) {
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
-        if(useanimation){
-            ft.setCustomAnimations(R.anim.enter,R.anim.exit,R.anim.pop_enter,R.anim.pop_exit);
+        if (useanimation) {
+            ft.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
         }
-        if(addToBackStack){
-            ft.replace(R.id.fl_main,fragment).addToBackStack(null).commit();
-        }else{
-            ft.replace(R.id.fl_main,fragment).commit();
+        if (addToBackStack) {
+            ft.replace(R.id.fl_main, fragment).addToBackStack(null).commit();
+        } else {
+            ft.replace(R.id.fl_main, fragment).commit();
         }
     }
 
     @Override
-    public void onReplaceTaskDetailListener() {
-        replaceFragment(new TaskDetailFragment(), true,true);
+    public void onReplaceTaskDetailListener(Task task, int position) {
+        if (task == null) {
+            TaskDetailFragment taskDetailFragment = new TaskDetailFragment();
+            taskDetailFragment.setTitle("Create Task");
+            taskDetailFragment.setPositionTask(-1);
+            replaceFragment(taskDetailFragment, true, true);
+        }else{
+            TaskDetailFragment taskDetailFragment = new TaskDetailFragment();
+            taskDetailFragment.setTitle("Edit Task");
+            taskDetailFragment.setTask(task);
+            taskDetailFragment.setPositionTask(position);
+            replaceFragment(taskDetailFragment, true, true);
+        }
     }
 
     @Override
     public void onReplaceTaskListener() {
-        replaceFragment(new TaskFragment(), false,true);
+        replaceFragment(new TaskFragment(), false, true);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+    @Subscribe
+    public void onEvent(Task task){
+        PomodoroFragment pomodoroFragment = new PomodoroFragment();
+        getSupportActionBar().setTitle(task.getName());
+        replaceFragment(pomodoroFragment,true,true);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        //
     }
 }
