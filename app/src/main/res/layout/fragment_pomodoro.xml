@@ -31,7 +31,7 @@
             android:background="#00000000"
             app:srcCompat="@drawable/ic_play_arrow_brown_24px"
             />
-        
+
         <TextView
             android:layout_centerHorizontal="true"
             android:layout_below="@id/ib_play_pause"

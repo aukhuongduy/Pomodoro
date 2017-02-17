@@ -147,7 +147,6 @@ public class TaskDetailFragment extends Fragment {
             } else {
                 DBContext.instance.tasks.set(positionTask, newtask);
             }
-            Log.d(TAG, "onOptionsItemSelected: "+task.toString());
             getActivity().onBackPressed();
         }
 
