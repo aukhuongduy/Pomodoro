@@ -62,8 +62,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(TAG, String.format("onCreate: %s",SharedPrefs.getInstance().getLoginCredentials().toString() ));
-        skipLoginIsPossible();
+//        skipLoginIsPossible();
         setContentView(R.layout.activity_login);
         progressDialog = new ProgressDialog(this);
         ButterKnife.bind(this);
@@ -275,7 +274,7 @@ public class LoginActivity extends AppCompatActivity {
     private void setError() {
         if(etPassWord.getText().length()<=0){
             tilPassword.setError("Your password can not be blank");
-        }else if(etPassWord.getText().length()<6){
+        }else if(etPassWord.getText().length()<5){
             tilPassword.setError("Your passsword must be longer 5 character");
         }else{
             tilPassword.setError(null);
@@ -290,7 +289,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
     private boolean isAcceptLogin() {
-        if(etUserName.getText().length()>0 && etPassWord.getText().length()>=6){
+        if(etUserName.getText().length()>0 && etPassWord.getText().length()>=5){
             return true;
         }else{
             return false;

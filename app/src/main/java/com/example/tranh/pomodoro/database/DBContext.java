@@ -1,10 +1,16 @@
 package com.example.tranh.pomodoro.database;
 
+import android.util.Log;
+
+import com.example.network.NetworkContext;
+import com.example.network.TaskNetworkContext;
 import com.example.tranh.pomodoro.database.models.Color;
 import com.example.tranh.pomodoro.database.models.Task;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * Created by Khuong Duy on 2/8/2017.
@@ -19,11 +25,10 @@ public class DBContext {
     }
 
     private void setDB() {
-        tasks.add(new Task("Study RecyclerView","#F4511E",true,25));
-        tasks.add(new Task("Practice RecyclerView","#6D4C41",true,21.5f));
-        tasks.add(new Task("Practice Networking","#757575",false, 16.5f));
-        tasks.add(new Task("Doing Homework","#FFB300",false,13.7f));
-        tasks.add(new Task("Study API","#FDD835",false,64f));
+        tasks = TaskNetworkContext.instance.getAllTask();
+        for (Task task : tasks) {
+            Log.d(TAG, String.format("setDB: %s", task.toString()));
+        }
     }
 
 

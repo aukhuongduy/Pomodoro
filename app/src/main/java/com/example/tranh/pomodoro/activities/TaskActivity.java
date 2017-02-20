@@ -26,6 +26,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import com.example.network.TaskNetworkContext;
 import com.example.tranh.pomodoro.R;
 import com.example.tranh.pomodoro.adapters.TaskAdapter;
 import com.example.tranh.pomodoro.database.models.Task;
@@ -105,6 +106,10 @@ public class TaskActivity extends AppCompatActivity
 
 
         ButterKnife.bind(this);
+
+        for(Task task : TaskNetworkContext.instance.getAllTask()){
+            Log.d(TAG, "onCreate: "+task.toString());
+        }
         onReplaceTaskListener();
     }
 
