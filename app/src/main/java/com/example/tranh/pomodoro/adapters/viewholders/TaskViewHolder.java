@@ -35,9 +35,6 @@ public class TaskViewHolder extends RecyclerView.ViewHolder {
     ImageButton ibPlayTask;
 
 
-
-
-
     public TaskViewHolder(View itemView) {
         super(itemView);
 
@@ -56,10 +53,10 @@ public class TaskViewHolder extends RecyclerView.ViewHolder {
         ibTaskColor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(task.isDone()){
+                if (task.isDone()) {
                     task.setDone(false);
                     ibTaskColor.setColorFilter(Color.parseColor(task.getColor()));
-                }else{
+                } else {
                     task.setDone(true);
                     ibTaskColor.setImageResource(R.drawable.ic_done_black_24px);
                     ibTaskColor.setColorFilter(Color.WHITE);
@@ -69,8 +66,10 @@ public class TaskViewHolder extends RecyclerView.ViewHolder {
         });
         //
         GradientDrawable drawable = (GradientDrawable) ibTaskColor.getBackground();
-        drawable.setColor(Color.parseColor(task.getColor()));
-        if(task.isDone()){
+        if (task.getColor() != null) {
+            drawable.setColor(Color.parseColor(task.getColor()));
+        }
+        if (task.isDone()) {
             ibTaskColor.setImageResource(R.drawable.ic_done_black_24px);
         }
     }

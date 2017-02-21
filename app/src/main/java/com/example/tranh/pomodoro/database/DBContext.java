@@ -25,10 +25,14 @@ public class DBContext {
     }
 
     private void setDB() {
-        tasks = TaskNetworkContext.instance.getAllTask();
+        getDBOnNetwork();
         for (Task task : tasks) {
             Log.d(TAG, String.format("setDB: %s", task.toString()));
         }
+    }
+
+    public void getDBOnNetwork() {
+        tasks = TaskNetworkContext.instance.getAllTask();
     }
 
 

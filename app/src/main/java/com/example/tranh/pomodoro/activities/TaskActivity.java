@@ -260,4 +260,5 @@ public class TaskActivity extends AppCompatActivity
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
         //
     }
+
 }

@@ -1,6 +1,8 @@
 package com.example.tranh.pomodoro.fragment;
 
 
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -13,10 +15,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.example.network.TaskNetworkContext;
 import com.example.tranh.pomodoro.R;
 import com.example.tranh.pomodoro.adapters.ColorAdapter;
 import com.example.tranh.pomodoro.database.DBContext;
@@ -39,6 +43,7 @@ public class TaskDetailFragment extends Fragment {
     private String title;
     private Task task;
     private int positionTask;
+    public static ProgressDialog progressDialog;
 
 
     ColorAdapter colorAdapter;
@@ -82,6 +87,7 @@ public class TaskDetailFragment extends Fragment {
 
     private void setUI(View view) {
         ButterKnife.bind(this, view);
+        progressDialog = new ProgressDialog(this.getActivity());
         colorAdapter = new ColorAdapter();
         rv_colors.setAdapter(colorAdapter);
         CustomGridLayoutManager customGridLayoutManager = new CustomGridLayoutManager(this.getContext(), 4);
@@ -134,6 +140,8 @@ public class TaskDetailFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
         if (item.getItemId() == R.id.i_OK) {
 
             String taskName = et_name.getText().toString();
@@ -141,8 +149,8 @@ public class TaskDetailFragment extends Fragment {
             String color = colorAdapter.getSelectedColor();
             boolean isDone = sw_isDone.isChecked();
             Task newtask = new Task(taskName, color, isDone,paymentPerHour);
-
             if (positionTask == -1) {
+                TaskNetworkContext.instance.addNewTask(newtask);
                 DBContext.instance.tasks.add(newtask);
             } else {
                 DBContext.instance.tasks.set(positionTask, newtask);
@@ -152,6 +160,5 @@ public class TaskDetailFragment extends Fragment {
 
         return false;
     }
-
 
 }

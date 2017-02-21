@@ -63,11 +63,9 @@ public class ColorAdapter extends RecyclerView.Adapter<ColorViewHolder> {
             holder.setCheck(false);
         }
 
-        Log.d(TAG, "onBindViewHolder: "+position);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "onClick: item "+position);
                 selectedPosition = position;
                 notifyDataSetChanged();
             }

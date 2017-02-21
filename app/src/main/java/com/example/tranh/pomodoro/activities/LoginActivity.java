@@ -104,7 +104,7 @@ public class LoginActivity extends AppCompatActivity {
             public void afterTextChanged(Editable s) {
                 if(etPassWord.getText().length()<=0){
                     tilPassword.setError("Your password can not be blank");
-                }else if(etPassWord.getText().length()<6){
+                }else if(etPassWord.getText().length()<5){
                     tilPassword.setError("Your passsword must be longer 5 character");
                 }else{
                     tilPassword.setError(null);

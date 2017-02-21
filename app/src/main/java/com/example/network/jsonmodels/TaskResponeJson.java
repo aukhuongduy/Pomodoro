@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by Khuong Duy on 2/21/2017.
  */
 
-public class GetAllTaskResponeJson {
+public class TaskResponeJson {
     @SerializedName("local_id")
     private String local_id;
     @SerializedName("name")
@@ -22,13 +22,20 @@ public class GetAllTaskResponeJson {
     @SerializedName("color")
     private String color;
 
-    public GetAllTaskResponeJson(String local_id, String name, float paymentPerHour, String due_date, boolean isDone, String id, String color) {
+    public TaskResponeJson(String local_id, String name, float paymentPerHour, String due_date, boolean isDone, String id, String color) {
         this.local_id = local_id;
         this.name = name;
         this.paymentPerHour = paymentPerHour;
         this.due_date = due_date;
         this.isDone = isDone;
         this.id = id;
+        this.color = color;
+    }
+
+    public TaskResponeJson(String name, float paymentPerHour, boolean isDone, String color) {
+        this.name = name;
+        this.paymentPerHour = paymentPerHour;
+        this.isDone = isDone;
         this.color = color;
     }
 
@@ -86,5 +93,18 @@ public class GetAllTaskResponeJson {
 
     public void setColor(String color) {
         this.color = color;
+    }
+
+    @Override
+    public String toString() {
+        return "TaskResponeJson{" +
+                "local_id='" + local_id + '\'' +
+                ", name='" + name + '\'' +
+                ", paymentPerHour=" + paymentPerHour +
+                ", due_date='" + due_date + '\'' +
+                ", isDone=" + isDone +
+                ", id='" + id + '\'' +
+                ", color='" + color + '\'' +
+                '}';
     }
 }
