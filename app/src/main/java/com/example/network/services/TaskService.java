@@ -1,10 +1,12 @@
 package com.example.network.services;
 
+import com.example.network.jsonmodels.DeleteTaskReponseJson;
 import com.example.network.jsonmodels.TaskResponeJson;
 
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Part;
@@ -19,4 +21,6 @@ public interface TaskService {
     Call<TaskResponeJson> addNewTask(@Body RequestBody body);
     @PUT("task/{local_id}")
     Call<TaskResponeJson> editATask(@Path("local_id")String local_id, @Body RequestBody body);
+    @DELETE("task/{local_id}")
+    Call<DeleteTaskReponseJson> deleteTask(@Path("local_id") String local_id);
 }

@@ -34,6 +34,15 @@ public class DBContext {
         tasks = TaskNetworkContext.instance.getAllTask();
     }
 
+    public void removeTask(Task task){
+        for (int i = 0; i < tasks.size(); i++) {
+            if(tasks.get(i).getLocal_id() == task.getLocal_id()){
+                tasks.remove(i);
+                return;
+            }
+        }
+    }
+
 
     public static final DBContext instance = new DBContext();
 

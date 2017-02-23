@@ -1,5 +1,7 @@
 package com.example.tranh.pomodoro.database.models;
 
+import java.util.UUID;
+
 /**
  * Created by Khuong Duy on 2/8/2017.
  */
@@ -19,6 +21,7 @@ public class Task {
         this.color = color;
         this.isDone = isDone;
         this.paymentPerHour = paymentPerHour;
+        local_id = UUID.randomUUID().toString();
     }
 
     public Task(String local_id, String due_date, String id, String name, String color, boolean isDone, float paymentPerHour) {

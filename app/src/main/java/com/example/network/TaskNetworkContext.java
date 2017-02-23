@@ -1,12 +1,16 @@
 package com.example.network;
 
 import android.util.Log;
+import android.widget.Toast;
 
+import com.example.network.jsonmodels.DeleteTaskReponseJson;
 import com.example.network.jsonmodels.TaskResponeJson;
 import com.example.network.services.TaskService;
 import com.example.network.services.GetAllTaskService;
+import com.example.tranh.pomodoro.database.DBContext;
 import com.example.tranh.pomodoro.database.models.Task;
 import com.example.tranh.pomodoro.settings.SharedPrefs;
+import com.example.tranh.pomodoro.signal.SignalGetDataSuccess;
 import com.google.gson.Gson;
 
 import org.greenrobot.eventbus.EventBus;
@@ -84,7 +88,7 @@ public class TaskNetworkContext extends NetworkContext {
         TaskService taskService = retrofit.create(TaskService.class);
         MediaType jsonType = MediaType.parse("application/json");
 
-        String createNewTaskJson = (new Gson().toJson(new TaskResponeJson(task.getName(), task.getPaymentPerHour(), task.isDone(), task.getColor())));
+        String createNewTaskJson = (new Gson().toJson(convertTaskResponeJson(task)));
 
         //
         RequestBody loginBody = RequestBody.create(jsonType, createNewTaskJson);
@@ -128,6 +132,26 @@ public class TaskNetworkContext extends NetworkContext {
 
     }
 
+    public void deleteTask(final Task task){
+        TaskService taskService = retrofit.create(TaskService.class);
+        
+//        Call<DeleteTaskReponseJson> deleteTaskReponseJsonCall = taskService.deleteTask(task.getLocal_id());
+        
+        taskService.deleteTask(task.getLocal_id()).enqueue(new Callback<DeleteTaskReponseJson>() {
+            @Override
+            public void onResponse(Call<DeleteTaskReponseJson> call, Response<DeleteTaskReponseJson> response) {
+                DBContext.instance.removeTask(task);
+                EventBus.getDefault().post(new SignalGetDataSuccess(true));
+            }
+
+            @Override
+            public void onFailure(Call<DeleteTaskReponseJson> call, Throwable t) {
+                Log.d(TAG, "onFailure: ");
+            }
+        });
+    }
+
+
     class TaskInterceptor implements Interceptor {
 
         @Override
@@ -145,15 +169,7 @@ public class TaskNetworkContext extends NetworkContext {
         }
     }
 
-    public class SignalGetDataSuccess {
-        boolean isDone;
-        public SignalGetDataSuccess(boolean isDone) {
-            this.isDone = isDone;
-        }
-        public boolean isDone(){
-            return isDone;
-        }
-    }
+
     public TaskResponeJson convertTaskResponeJson(Task task){
         TaskResponeJson taskResponeJson = new TaskResponeJson(task.getLocal_id(),
                 task.getName(), task.getPaymentPerHour(),task.getDue_date(),task.isDone(),task.getId(),task.getColor());

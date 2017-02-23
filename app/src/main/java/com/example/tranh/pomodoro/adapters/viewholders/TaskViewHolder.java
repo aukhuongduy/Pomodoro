@@ -9,8 +9,11 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.example.network.TaskNetworkContext;
 import com.example.tranh.pomodoro.R;
+import com.example.tranh.pomodoro.database.DBContext;
 import com.example.tranh.pomodoro.database.models.Task;
+import com.example.tranh.pomodoro.signal.SignalGetDataSuccess;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -34,11 +37,17 @@ public class TaskViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.ib_play_task)
     ImageButton ibPlayTask;
 
+    @BindView(R.id.ib_deleteTask)
+    ImageButton ibDeleteTask;
 
     public TaskViewHolder(View itemView) {
         super(itemView);
 
         ButterKnife.bind(this, itemView);
+    }
+
+    public TextView getTvTaskName() {
+        return tvTaskName;
     }
 
     public void bind(final Task task) {
@@ -64,6 +73,12 @@ public class TaskViewHolder extends RecyclerView.ViewHolder {
 
             }
         });
+        ibDeleteTask.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EventBus.getDefault().post(new DeleteTask(task));
+            }
+        });
         //
         GradientDrawable drawable = (GradientDrawable) ibTaskColor.getBackground();
         if (task.getColor() != null) {
@@ -71,6 +86,17 @@ public class TaskViewHolder extends RecyclerView.ViewHolder {
         }
         if (task.isDone()) {
             ibTaskColor.setImageResource(R.drawable.ic_done_black_24px);
+        }
+    }
+    public class DeleteTask{
+        private Task task;
+
+        public DeleteTask(Task task) {
+            this.task = task;
+        }
+
+        public Task getTask() {
+            return task;
         }
     }
 }

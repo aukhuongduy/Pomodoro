@@ -22,6 +22,7 @@ import static android.content.ContentValues.TAG;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskViewHolder> {
 
+
     public interface TaskItemClickListener {
         void onItemClick(Task task, int position);
     }
@@ -32,6 +33,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskViewHolder> {
     public void setTaskItemClickListener(TaskItemClickListener taskItemClickListener){
         this.taskItemClickListener = taskItemClickListener;
     }
+
 
 
     @Override
@@ -50,7 +52,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskViewHolder> {
         final Task task = DBContext.instance.allTask().get(position);
         // bind
         holder.bind(task);
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
+        holder.getTvTaskName().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (taskItemClickListener !=null){
@@ -58,7 +60,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskViewHolder> {
                 }
             }
         });
-
     }
 
     @Override
