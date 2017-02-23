@@ -106,9 +106,9 @@ public class TaskDetailFragment extends Fragment {
         sw_isDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(task.isDone()){
+                if (task.isDone()) {
                     tv_isDone.setText("This task is working");
-                }else {
+                } else {
                     tv_isDone.setText("This task is done");
                 }
             }
@@ -117,14 +117,14 @@ public class TaskDetailFragment extends Fragment {
             et_name.setText(task.getName());
             et_payment_per_hour.setText(String.format("%.1f", task.getPaymentPerHour()));
             sw_isDone.setChecked(task.isDone());
-            if(task.isDone()){
+            if (task.isDone()) {
                 tv_isDone.setText("This task is working");
-            }else {
+            } else {
                 tv_isDone.setText("This task is done");
             }
             Log.d(TAG, String.format("setUI: %s", task.getColor()));
             colorAdapter.setSelectedColor(task.getColor());
-        }else{
+        } else {
             tv_isDone.setVisibility(View.GONE);
             sw_isDone.setVisibility(View.GONE);
         }
@@ -148,11 +148,18 @@ public class TaskDetailFragment extends Fragment {
             float paymentPerHour = Float.parseFloat(et_payment_per_hour.getText().toString());
             String color = colorAdapter.getSelectedColor();
             boolean isDone = sw_isDone.isChecked();
-            Task newtask = new Task(taskName, color, isDone,paymentPerHour);
+            Task newtask;
+            if (task == null) {
+                 newtask= new Task(taskName, color, isDone, paymentPerHour);
+            }else{
+                 newtask = new Task(task.getLocal_id(),task.getDue_date(),task.getId(),taskName,color,isDone,paymentPerHour);
+            }
             if (positionTask == -1) {
                 TaskNetworkContext.instance.addNewTask(newtask);
                 DBContext.instance.tasks.add(newtask);
+                EventBus.getDefault().post(new NotidataChanged(true));
             } else {
+                TaskNetworkContext.instance.editATask(newtask);
                 DBContext.instance.tasks.set(positionTask, newtask);
             }
             getActivity().onBackPressed();
@@ -161,4 +168,15 @@ public class TaskDetailFragment extends Fragment {
         return false;
     }
 
+    public class NotidataChanged {
+        boolean isChanged;
+
+        public boolean isChanged() {
+            return isChanged;
+        }
+
+        public NotidataChanged(boolean isChanged) {
+            this.isChanged = isChanged;
+        }
+    }
 }

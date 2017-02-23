@@ -15,9 +15,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.network.TaskNetworkContext;
 import com.example.tranh.pomodoro.R;
 import com.example.tranh.pomodoro.activities.TaskActivity;
 import com.example.tranh.pomodoro.adapters.TaskAdapter;
+import com.example.tranh.pomodoro.database.DBContext;
 import com.example.tranh.pomodoro.database.models.Task;
 
 import org.greenrobot.eventbus.EventBus;
@@ -50,7 +52,6 @@ public class TaskFragment extends Fragment {
     private TaskAdapter taskAdapter;
 
     public TaskFragment() {
-
         // Required empty public constructor
     }
 
@@ -81,12 +82,49 @@ public class TaskFragment extends Fragment {
 
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this.getContext(), DividerItemDecoration.VERTICAL);
         rvTask.addItemDecoration(dividerItemDecoration);
+        taskAdapter.notifyDataSetChanged();
     }
     @OnClick(R.id.fab)
     void onFabClick(){
         replaceFragment(null,-1);
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+    @Subscribe
+    public void onDataDone(TaskNetworkContext.SignalGetDataSuccess signalGetDataSuccess){
+        if(signalGetDataSuccess.isDone()){
+            taskAdapter.setTaskItemClickListener(new TaskAdapter.TaskItemClickListener() {
+                @Override
+                public void onItemClick(Task task, int position) {
+                    replaceFragment(task, position);
+                }
+            });
+
+            rvTask.setAdapter(taskAdapter);
+            rvTask.setLayoutManager(new LinearLayoutManager(this.getContext()));
+
+            AppCompatActivity activity =  (AppCompatActivity) getActivity();
+            activity.getSupportActionBar().setTitle("Tasks");
+
+            DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this.getContext(), DividerItemDecoration.VERTICAL);
+            rvTask.addItemDecoration(dividerItemDecoration);
+            taskAdapter.notifyDataSetChanged();
+        }
+
+    }
+    @Subscribe
+    public void onDataChanged(TaskDetailFragment.NotidataChanged notidataChanged){
+        taskAdapter.notifyDataSetChanged();
+    }
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
 
     public void replaceFragment(Task task, int position) {
         this.position = position;

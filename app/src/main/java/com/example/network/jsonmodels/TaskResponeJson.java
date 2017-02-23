@@ -1,6 +1,9 @@
 package com.example.network.jsonmodels;
 
+import com.example.tranh.pomodoro.database.models.Task;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.UUID;
 
 /**
  * Created by Khuong Duy on 2/21/2017.
@@ -37,7 +40,9 @@ public class TaskResponeJson {
         this.paymentPerHour = paymentPerHour;
         this.isDone = isDone;
         this.color = color;
+        this.local_id = UUID.randomUUID().toString();
     }
+
 
     public String getLocal_id() {
         return local_id;

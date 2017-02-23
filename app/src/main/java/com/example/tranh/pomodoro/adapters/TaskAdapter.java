@@ -2,6 +2,7 @@ package com.example.tranh.pomodoro.adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.text.Layout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,8 @@ import com.example.tranh.pomodoro.database.DBContext;
 import com.example.tranh.pomodoro.database.models.Task;
 
 import java.util.List;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * Created by Khuong Duy on 2/8/2017.

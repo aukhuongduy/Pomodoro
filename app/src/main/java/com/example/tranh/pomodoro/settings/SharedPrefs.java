@@ -38,6 +38,7 @@ public class SharedPrefs {
 
         String json = gson.toJson(loginCredentials);
         this.sharedPreferences.edit().putString(LOGIN_KEY, json).commit();
+        Log.d(TAG, "put: "+json);
     }
 
     public void put(SettingCredentials settingCredentials) {
@@ -76,6 +77,9 @@ public class SharedPrefs {
             return null;
         }
 
+    }
+    public void clear(){
+        sharedPreferences.edit().clear().commit();
     }
 
 }

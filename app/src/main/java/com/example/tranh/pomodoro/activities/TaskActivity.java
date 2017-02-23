@@ -29,6 +29,7 @@ import android.widget.Toast;
 import com.example.network.TaskNetworkContext;
 import com.example.tranh.pomodoro.R;
 import com.example.tranh.pomodoro.adapters.TaskAdapter;
+import com.example.tranh.pomodoro.database.DBContext;
 import com.example.tranh.pomodoro.database.models.Task;
 import com.example.tranh.pomodoro.fragment.FragmentTaskDetailListener;
 import com.example.tranh.pomodoro.fragment.FragmentTaskListener;
@@ -51,7 +52,7 @@ public class TaskActivity extends AppCompatActivity
     @BindDrawable(R.drawable.ic_arrow_back_white_24dp)
     Drawable drawableback;
 
-
+    private TaskNetworkContext taskNetworkContext;
     private TaskAdapter taskAdapter;
 
 
@@ -106,11 +107,8 @@ public class TaskActivity extends AppCompatActivity
 
 
         ButterKnife.bind(this);
-
-        for(Task task : TaskNetworkContext.instance.getAllTask()){
-            Log.d(TAG, "onCreate: "+task.toString());
-        }
         onReplaceTaskListener();
+        DBContext.instance.getDBOnNetwork();
     }
 
     public void transactionFragment(Fragment fragment, boolean addtobackstack) {

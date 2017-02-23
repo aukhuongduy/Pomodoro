@@ -7,33 +7,25 @@ import com.google.gson.annotations.SerializedName;
  */
 
 public class RegisterResponeJson {
-    @SerializedName("code")
-    private int code;
-    @SerializedName("message")
-    private String message;
-    @SerializedName("token")
-    private String token;
+    @SerializedName("access_token")
+    String access_token;
 
-    public RegisterResponeJson(int code, String message, String token) {
-        this.code = code;
-        this.message = message;
-        this.token = token;
+    public RegisterResponeJson(String access_token) {
+        this.access_token = access_token;
     }
 
-    public int getCode() {
-        return code;
+    public String getAccess_token() {
+        return access_token;
     }
 
-    public String getMessage() {
-        return message;
-    }
-
-    public String getToken() {
-        return token;
+    public void setAccess_token(String access_token) {
+        this.access_token = access_token;
     }
 
     @Override
     public String toString() {
-        return super.toString();
+        return "RegisterResponeJson{" +
+                "access_token='" + access_token + '\'' +
+                '}';
     }
 }

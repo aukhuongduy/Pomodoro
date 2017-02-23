@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.network.AccountNetworkContext;
 import com.example.network.jsonmodels.LoginBodyJson;
 import com.example.network.jsonmodels.LoginResponeJson;
 import com.example.network.jsonmodels.RegisterBodyJson;
@@ -45,15 +46,19 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private static final String TAG = LoginActivity.class.toString();
+    private static final String TAG = "LoginActivity";
     @BindView(R.id.et_username)
     EditText etUserName;
-    @BindView(R.id.et_password) EditText etPassWord;
-    @BindView(R.id.bt_register) Button btRegister;
-    @BindView(R.id.bt_login) Button btLogin;
-    @BindView(R.id.text_input_layout) TextInputLayout tilUsername;
-    @BindView(R.id.text_input_layout2) TextInputLayout tilPassword;
-    private Retrofit retrofit;
+    @BindView(R.id.et_password)
+    EditText etPassWord;
+    @BindView(R.id.bt_register)
+    Button btRegister;
+    @BindView(R.id.bt_login)
+    Button btLogin;
+    @BindView(R.id.text_input_layout)
+    TextInputLayout tilUsername;
+    @BindView(R.id.text_input_layout2)
+    TextInputLayout tilPassword;
     private String username;
     private String password;
     private String token;
@@ -66,8 +71,6 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         progressDialog = new ProgressDialog(this);
         ButterKnife.bind(this);
-
-
 
         etUserName.addTextChangedListener(new TextWatcher() {
             @Override
@@ -82,9 +85,9 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(etUserName.getText().length()<=0){
+                if (etUserName.getText().length() <= 0) {
                     tilUsername.setError("Username cannot be blank!");
-                }else{
+                } else {
                     tilUsername.setError(null);
                 }
             }
@@ -102,11 +105,12 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(etPassWord.getText().length()<=0){
+                SharedPrefs.getInstance().clear();
+                if (etPassWord.getText().length() <= 0) {
                     tilPassword.setError("Your password can not be blank");
-                }else if(etPassWord.getText().length()<5){
+                } else if (etPassWord.getText().length() < 5) {
                     tilPassword.setError("Your passsword must be longer 5 character");
-                }else{
+                } else {
                     tilPassword.setError(null);
                 }
             }
@@ -116,7 +120,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 
-                if(actionId == EditorInfo.IME_ACTION_DONE){
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
                     attemptLogin();
                     return false;
                 }
@@ -137,28 +141,21 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
         SharedPrefs sharedPrefs = new SharedPrefs(this);
-        Log.d(TAG, String.format("onCreate: %s", sharedPrefs.getLoginCredentials().toString()));
-
 
     }
 
     private void sendLogin(String username, String password) {
-        //create base URL
-        retrofit = new Retrofit.Builder().
-                baseUrl("http://a-task.herokuapp.com/api/").
-                addConverterFactory(GsonConverterFactory.create()).
-                build();
+
         //Create Service
-        LoginService loginService = retrofit.create(LoginService.class);
+        LoginService loginService = AccountNetworkContext.instance.getRetrofit().create(LoginService.class);
         //data
         MediaType jsonType = MediaType.parse("application/json");
 
         String loginJSON = (new Gson().toJson(new LoginBodyJson(username, password)));
 
-        //
+
         RequestBody loginBody = RequestBody.create(jsonType, loginJSON);
         //format
-
 
         //Create Call
 
@@ -169,7 +166,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<LoginResponeJson> call, Response<LoginResponeJson> response) {
                 LoginResponeJson loginResponeJson = response.body();
-                Log.d(TAG, "onResponse: "+ response.code());
+                Log.d(TAG, "onResponse: " + response.code());
                 if (loginResponeJson == null) {
                     progressDialog.hide();
                     progressDialog.dismiss();
@@ -205,36 +202,31 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void sendRegister() {
-        retrofit = new Retrofit.Builder().
-                baseUrl("http://a-task.herokuapp.com/api/").
-                addConverterFactory(GsonConverterFactory.create()).
-                build();
-        RegisterService registerService = retrofit.create(RegisterService.class);
+        RegisterService registerService = AccountNetworkContext.instance.getRetrofit().create(RegisterService.class);
         //data
         MediaType jsonType = MediaType.parse("application/json");
 
         String registerJSON = (new Gson().toJson(new RegisterBodyJson(username, password)));
+        Log.d(TAG, "sendRegister: "+registerJSON);
 
         RequestBody registerBody = RequestBody.create(jsonType, registerJSON);
 
-        registerService.register(registerBody).enqueue(new Callback<RegisterResponeJson>() {
+        Call<RegisterResponeJson> registerCall = registerService.register(registerBody);
+
+        registerCall.enqueue(new Callback<RegisterResponeJson>() {
             @Override
             public void onResponse(Call<RegisterResponeJson> call, Response<RegisterResponeJson> response) {
                 progressDialog.hide();
                 progressDialog.dismiss();
-                RegisterResponeJson registerResponeJson = response.body();
-                if (registerResponeJson == null) {
-                    Log.d(TAG, String.format("onResponse: %s", response.headers().value(4)));
-                    if (response.code() == 400) {
-                        Toast.makeText(LoginActivity.this, "This account already exits", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(LoginActivity.this, "Some thing wrong with system", Toast.LENGTH_SHORT).show();
-                    }
+                Log.d(TAG, String.format("onResponse: " + response.code()));
+                if (response.code() == 400) {
+                    Toast.makeText(LoginActivity.this, "This account already exits", Toast.LENGTH_SHORT).show();
+                } else if (response.code() == 200) {
+                    Toast.makeText(LoginActivity.this, String.format("Registered"), Toast.LENGTH_SHORT).show();
                 } else {
-                    if (response.code() == 200) {
-                        Toast.makeText(LoginActivity.this, String.format("Registered"), Toast.LENGTH_SHORT).show();
-                    }
+                    Toast.makeText(LoginActivity.this, "Some thing wrong with system", Toast.LENGTH_SHORT).show();
                 }
+
             }
 
             @Override
@@ -245,10 +237,22 @@ public class LoginActivity extends AppCompatActivity {
 
             }
         });
+
+//        registerService.register(registerBody).enqueue(new Callback<RegisterResponeJson>() {
+//            @Override
+//            public void onResponse(Call<RegisterResponeJson> call, Response<RegisterResponeJson> response) {
+//
+//            }
+//
+//            @Override
+//            public void onFailure(Call<RegisterResponeJson> call, Throwable t) {
+//
+//            }
+//        });
     }
 
     private void onLoginSuccess() {
-        SharedPrefs.getInstance().put(new LoginCredentials(username, password,token, false));
+        SharedPrefs.getInstance().put(new LoginCredentials(username, password, token, false));
         Toast.makeText(this, "Logged in", Toast.LENGTH_SHORT).show();
         goToActivity();
     }
@@ -260,38 +264,38 @@ public class LoginActivity extends AppCompatActivity {
 
 
     private void attemptRegister() {
-        if(isAcceptLogin()){
+        if (isAcceptLogin()) {
             username = etUserName.getText().toString();
             password = etPassWord.getText().toString();
             sendRegister();
             getLoadingScreen();
-        }else{
+        } else {
             setError();
         }
 
     }
 
     private void setError() {
-        if(etPassWord.getText().length()<=0){
+        if (etPassWord.getText().length() <= 0) {
             tilPassword.setError("Your password can not be blank");
-        }else if(etPassWord.getText().length()<5){
+        } else if (etPassWord.getText().length() < 5) {
             tilPassword.setError("Your passsword must be longer 5 character");
-        }else{
+        } else {
             tilPassword.setError(null);
         }
 
-        if(etUserName.getText().length()<=0){
+        if (etUserName.getText().length() <= 0) {
             tilUsername.setError("Username cannot be blank!");
-        }else{
+        } else {
             tilUsername.setError(null);
         }
     }
 
 
     private boolean isAcceptLogin() {
-        if(etUserName.getText().length()>0 && etPassWord.getText().length()>=5){
+        if (etUserName.getText().length() > 0 && etPassWord.getText().length() >= 5) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
@@ -307,12 +311,13 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void attemptLogin() {
-        if(isAcceptLogin()){
+        if (isAcceptLogin()) {
             username = String.valueOf(etUserName.getText());
             password = etPassWord.getText().toString();
             sendLogin(username, password);
+            Log.d(TAG, "attemptLogin: " + token);
             getLoadingScreen();
-        }else{
+        } else {
             setError();
         }
 
@@ -329,7 +334,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void goToActivity() {
         Intent intent = new Intent(this, TaskActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK| Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
 }

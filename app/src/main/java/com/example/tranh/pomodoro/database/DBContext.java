@@ -25,7 +25,6 @@ public class DBContext {
     }
 
     private void setDB() {
-        getDBOnNetwork();
         for (Task task : tasks) {
             Log.d(TAG, String.format("setDB: %s", task.toString()));
         }
