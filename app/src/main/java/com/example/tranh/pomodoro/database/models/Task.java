@@ -2,18 +2,27 @@ package com.example.tranh.pomodoro.database.models;
 
 import java.util.UUID;
 
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+
 /**
  * Created by Khuong Duy on 2/8/2017.
  */
 
-public class Task {
+public class Task  extends RealmObject{
+    @PrimaryKey
     private String local_id;
     private String due_date;
     private String id;
     private String name;
     private String color;
+    private boolean isSync;
     private boolean isDone;
     private float paymentPerHour;
+
+
+    public Task() {
+    }
 
 
     public Task(String name, String color, boolean isDone, float paymentPerHour) {
@@ -32,6 +41,14 @@ public class Task {
         this.color = color;
         this.isDone = isDone;
         this.paymentPerHour = paymentPerHour;
+    }
+
+    public boolean isSync() {
+        return isSync;
+    }
+
+    public void setSync(boolean sync) {
+        isSync = sync;
     }
 
     public String getLocal_id() {

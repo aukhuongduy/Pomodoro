@@ -18,11 +18,6 @@ public class PomodoroApplication extends Application{
         super.onCreate();
         Log.d(TAG, "onCreate: ");
         SharedPrefs.init(this);
-
-        for(Task task : DBContext.instance.allTask()){
-            Log.d(TAG, String.format("onCreate: %s",task));
-        }
-
-
+        DBContext.instance.onCreate(this);
     }
 }

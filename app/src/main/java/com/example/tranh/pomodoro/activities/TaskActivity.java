@@ -1,8 +1,10 @@
 package com.example.tranh.pomodoro.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.design.widget.FloatingActionButton;
@@ -47,7 +49,6 @@ import butterknife.OnClick;
 
 public class TaskActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, FragmentTaskDetailListener, FragmentTaskListener {
-
     private static final String TAG = "TaskActivity";
     @BindDrawable(R.drawable.ic_arrow_back_white_24dp)
     Drawable drawableback;
@@ -108,7 +109,9 @@ public class TaskActivity extends AppCompatActivity
 
         ButterKnife.bind(this);
         onReplaceTaskListener();
-        DBContext.instance.getDBOnNetwork();
+        if (isNetworkConnected()) {
+            DBContext.instance.getDBOnNetwork();
+        }
     }
 
     public void transactionFragment(Fragment fragment, boolean addtobackstack) {
@@ -215,6 +218,12 @@ public class TaskActivity extends AppCompatActivity
         }
     }
 
+    private boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        return cm.getActiveNetworkInfo() != null;
+    }
+
     @Override
     public void onReplaceTaskDetailListener(Task task, int position) {
         if (task == null) {
@@ -222,7 +231,7 @@ public class TaskActivity extends AppCompatActivity
             taskDetailFragment.setTitle("Create Task");
             taskDetailFragment.setPositionTask(-1);
             replaceFragment(taskDetailFragment, true, true);
-        }else{
+        } else {
             TaskDetailFragment taskDetailFragment = new TaskDetailFragment();
             taskDetailFragment.setTitle("Edit Task");
             taskDetailFragment.setTask(task);
@@ -241,11 +250,12 @@ public class TaskActivity extends AppCompatActivity
         super.onStart();
         EventBus.getDefault().register(this);
     }
+
     @Subscribe
-    public void onEvent(Task task){
+    public void onEvent(Task task) {
         PomodoroFragment pomodoroFragment = new PomodoroFragment();
         getSupportActionBar().setTitle(task.getName());
-        replaceFragment(pomodoroFragment,true,true);
+        replaceFragment(pomodoroFragment, true, true);
     }
 
     @Override

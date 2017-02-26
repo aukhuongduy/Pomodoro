@@ -1,5 +1,6 @@
 package com.example.tranh.pomodoro.database;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.example.network.NetworkContext;
@@ -10,6 +11,8 @@ import com.example.tranh.pomodoro.database.models.Task;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.realm.Realm;
+
 import static android.content.ContentValues.TAG;
 
 /**
@@ -17,39 +20,54 @@ import static android.content.ContentValues.TAG;
  */
 
 public class DBContext {
+    public Realm realm ;
+    public static final  DBContext instance = new DBContext();
 
-    public  ArrayList<Task> tasks = new ArrayList<>();
-
+    public void onCreate(Context context){
+        realm.init(context);
+        realm = Realm.getDefaultInstance();
+    }
     public DBContext() {
-        setDB();
+    }
+    public Task add(Task task){
+        realm.beginTransaction();
+        Task taskAdded = realm.copyToRealm(task);
+        realm.commitTransaction();
+        return taskAdded;
+    }
+    public void update(String local_id,String name, float paymentPerHour, String colors, boolean isDone){
+        realm.beginTransaction();
+        Task oldTask = realm.where(Task.class).equalTo("local_id",local_id).findFirst();
+        oldTask.setName(name);
+        oldTask.setPaymentPerHour(paymentPerHour);
+        oldTask.setColor(colors);
+        oldTask.setDone(isDone);
+        realm.commitTransaction();
     }
 
-    private void setDB() {
-        for (Task task : tasks) {
-            Log.d(TAG, String.format("setDB: %s", task.toString()));
-        }
-    }
 
     public void getDBOnNetwork() {
-        tasks = TaskNetworkContext.instance.getAllTask();
+        List<Task> list = TaskNetworkContext.instance.getAllTask();
+    }
+
+    public void addOrUpdate(Task task){
+        realm.beginTransaction();
+        realm.copyToRealmOrUpdate(task);
+        realm.commitTransaction();
     }
 
     public void removeTask(Task task){
-        for (int i = 0; i < tasks.size(); i++) {
-            if(tasks.get(i).getLocal_id() == task.getLocal_id()){
-                tasks.remove(i);
-                return;
-            }
-        }
+        realm.beginTransaction();
+        realm.where(Task.class).equalTo("local_id",task.getLocal_id()).findFirst().deleteFromRealm();
+        realm.commitTransaction();
     }
 
-
-    public static final DBContext instance = new DBContext();
 
     public List<Task> allTask(){
         //Create array list
-        return tasks;
+        return realm.where(Task.class).findAll();
     }
+
 
     public List<Color> allColor(){
         ArrayList<Color> colors = new ArrayList<>();
@@ -67,7 +85,4 @@ public class DBContext {
     }
 
 
-    public void addTask(Task newtask) {
-        tasks.add(newtask);
-    }
 }

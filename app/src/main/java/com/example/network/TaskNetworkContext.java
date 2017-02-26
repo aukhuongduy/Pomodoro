@@ -9,7 +9,9 @@ import com.example.network.services.TaskService;
 import com.example.network.services.GetAllTaskService;
 import com.example.tranh.pomodoro.database.DBContext;
 import com.example.tranh.pomodoro.database.models.Task;
+import com.example.tranh.pomodoro.fragment.TaskDetailFragment;
 import com.example.tranh.pomodoro.settings.SharedPrefs;
+import com.example.tranh.pomodoro.signal.NotidataChanged;
 import com.example.tranh.pomodoro.signal.SignalGetDataSuccess;
 import com.google.gson.Gson;
 
@@ -31,6 +33,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 import static android.content.ContentValues.TAG;
+import static com.example.tranh.pomodoro.fragment.TaskDetailFragment.*;
 
 /**
  * Created by Khuong Duy on 2/21/2017.
@@ -71,6 +74,9 @@ public class TaskNetworkContext extends NetworkContext {
                         list.add(task);
                     }
                     EventBus.getDefault().post(new SignalGetDataSuccess(true));
+                    for (Task task : list) {
+                        DBContext.instance.addOrUpdate(task);
+                    }
                 } else {
                     Log.e(TAG, "onResponse: " + "failure");
                 }
@@ -100,6 +106,7 @@ public class TaskNetworkContext extends NetworkContext {
             @Override
             public void onResponse(Call<TaskResponeJson> call, Response<TaskResponeJson> response) {
                 TaskResponeJson taskResponeJson = response.body();
+
                 Log.d(TAG, "onResponse: " + taskResponeJson.toString());
             }
 

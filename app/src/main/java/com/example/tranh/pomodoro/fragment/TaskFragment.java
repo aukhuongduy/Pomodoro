@@ -24,6 +24,7 @@ import com.example.tranh.pomodoro.adapters.TaskAdapter;
 import com.example.tranh.pomodoro.adapters.viewholders.TaskViewHolder;
 import com.example.tranh.pomodoro.database.DBContext;
 import com.example.tranh.pomodoro.database.models.Task;
+import com.example.tranh.pomodoro.signal.NotidataChanged;
 import com.example.tranh.pomodoro.signal.SignalGetDataSuccess;
 
 import org.greenrobot.eventbus.EventBus;
@@ -124,7 +125,7 @@ public class TaskFragment extends Fragment {
     }
 
     @Subscribe
-    public void onDataChanged(TaskDetailFragment.NotidataChanged notidataChanged) {
+    public void onDataChanged(NotidataChanged notidataChanged) {
         taskAdapter.notifyDataSetChanged();
     }
 

@@ -67,7 +67,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        skipLoginIsPossible();
+        skipLoginIsPossible();
         setContentView(R.layout.activity_login);
         progressDialog = new ProgressDialog(this);
         ButterKnife.bind(this);

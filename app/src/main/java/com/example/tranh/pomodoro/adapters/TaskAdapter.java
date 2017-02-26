@@ -64,6 +64,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskViewHolder> {
 
     @Override
     public int getItemCount() {
+        Log.d(TAG, "getItemCount: "+DBContext.instance.allTask().size());
         return DBContext.instance.allTask().size();
     }
 }

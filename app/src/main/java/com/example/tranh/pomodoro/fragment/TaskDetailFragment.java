@@ -26,6 +26,7 @@ import com.example.tranh.pomodoro.adapters.ColorAdapter;
 import com.example.tranh.pomodoro.database.DBContext;
 import com.example.tranh.pomodoro.database.models.Task;
 import com.example.tranh.pomodoro.decorations.TaskColorDecor;
+import com.example.tranh.pomodoro.signal.NotidataChanged;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -156,11 +157,11 @@ public class TaskDetailFragment extends Fragment {
             }
             if (positionTask == -1) {
                 TaskNetworkContext.instance.addNewTask(newtask);
-                DBContext.instance.tasks.add(newtask);
+                DBContext.instance.add(newtask);
                 EventBus.getDefault().post(new NotidataChanged(true));
             } else {
                 TaskNetworkContext.instance.editATask(newtask);
-                DBContext.instance.tasks.set(positionTask, newtask);
+                DBContext.instance.update(newtask.getLocal_id(),newtask.getName(),newtask.getPaymentPerHour(),newtask.getColor(),newtask.isDone());
             }
             getActivity().onBackPressed();
         }
@@ -168,15 +169,5 @@ public class TaskDetailFragment extends Fragment {
         return false;
     }
 
-    public class NotidataChanged {
-        boolean isChanged;
 
-        public boolean isChanged() {
-            return isChanged;
-        }
-
-        public NotidataChanged(boolean isChanged) {
-            this.isChanged = isChanged;
-        }
-    }
 }

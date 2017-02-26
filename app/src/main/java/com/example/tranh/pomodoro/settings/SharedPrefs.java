@@ -38,7 +38,7 @@ public class SharedPrefs {
 
         String json = gson.toJson(loginCredentials);
         this.sharedPreferences.edit().putString(LOGIN_KEY, json).commit();
-        Log.d(TAG, "put: "+json);
+        Log.d(TAG, "put: " + json);
     }
 
     public void put(SettingCredentials settingCredentials) {
@@ -46,13 +46,13 @@ public class SharedPrefs {
         this.sharedPreferences.edit().putString(SETTING_CASE, json).commit();
     }
 
-    public SettingCredentials getSettingCredentials(){
-        SettingCredentials  settingCredentials;
-        String settingJSON = this.sharedPreferences.getString(SETTING_CASE,null);
-        if(settingJSON == null){
+    public SettingCredentials getSettingCredentials() {
+        SettingCredentials settingCredentials;
+        String settingJSON = this.sharedPreferences.getString(SETTING_CASE, null);
+        if (settingJSON == null) {
             return null;
-        }else{
-            settingCredentials = gson.fromJson(settingJSON,SettingCredentials.class);
+        } else {
+            settingCredentials = gson.fromJson(settingJSON, SettingCredentials.class);
         }
         Log.d(TAG, "count = " + settingCredentials.getCountToLongBreak());
         return settingCredentials;
@@ -69,16 +69,18 @@ public class SharedPrefs {
         return loginCredentials;
     }
 
-    public String getAccessToken(){
-        LoginCredentials loginCredentials =getLoginCredentials();
-        if(loginCredentials.getAccessToken()!=null){
-            return loginCredentials.getAccessToken();
-        }else{
-            return null;
-        }
-
+    public String getAccessToken() {
+        if (getLoginCredentials() != null) {
+            LoginCredentials loginCredentials = getLoginCredentials();
+            if (loginCredentials.getAccessToken() != null) {
+                return loginCredentials.getAccessToken();
+            } else {
+                return null;
+            }
+        }return null;
     }
-    public void clear(){
+
+    public void clear() {
         sharedPreferences.edit().clear().commit();
     }
 
