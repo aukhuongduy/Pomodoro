@@ -1,8 +1,10 @@
 package com.example.tranh.pomodoro.fragment;
 
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -26,6 +28,7 @@ import com.example.tranh.pomodoro.database.DBContext;
 import com.example.tranh.pomodoro.database.models.Task;
 import com.example.tranh.pomodoro.signal.NotidataChanged;
 import com.example.tranh.pomodoro.signal.SignalGetDataSuccess;
+import com.example.tranh.pomodoro.signal.SignalOnFailureNetwork;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -133,6 +136,11 @@ public class TaskFragment extends Fragment {
     public void onDeleleClicked(TaskViewHolder.DeleteTask deleteTask) {
         showAlertDelete(deleteTask.getTask());
     }
+    @Subscribe
+    public void onConnectFailed(SignalOnFailureNetwork signalOnFailureNetwork){
+        showAlertNoInternet();
+    }
+
 
     @Override
     public void onStop() {
@@ -156,6 +164,26 @@ public class TaskFragment extends Fragment {
                 }).setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+        final AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+    private void showAlertNoInternet(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
+        builder.setCancelable(true).setTitle("Can't Connect").setMessage("Go to Setting/Internet").setPositiveButton("Go", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = new Intent(Intent.ACTION_MAIN);
+                intent.setComponent(new ComponentName("com.android.settings",
+                        "com.android.settings.Settings$DataUsageSummaryActivity"));
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+            }
+        }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
             }
         });
         final AlertDialog dialog = builder.create();

@@ -157,11 +157,10 @@ public class TaskDetailFragment extends Fragment {
             }
             if (positionTask == -1) {
                 TaskNetworkContext.instance.addNewTask(newtask);
-                DBContext.instance.add(newtask);
-                EventBus.getDefault().post(new NotidataChanged(true));
+
             } else {
                 TaskNetworkContext.instance.editATask(newtask);
-                DBContext.instance.update(newtask.getLocal_id(),newtask.getName(),newtask.getPaymentPerHour(),newtask.getColor(),newtask.isDone());
+
             }
             getActivity().onBackPressed();
         }

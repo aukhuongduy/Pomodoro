@@ -13,6 +13,7 @@ import com.example.tranh.pomodoro.fragment.TaskDetailFragment;
 import com.example.tranh.pomodoro.settings.SharedPrefs;
 import com.example.tranh.pomodoro.signal.NotidataChanged;
 import com.example.tranh.pomodoro.signal.SignalGetDataSuccess;
+import com.example.tranh.pomodoro.signal.SignalOnFailureNetwork;
 import com.google.gson.Gson;
 
 import org.greenrobot.eventbus.EventBus;
@@ -77,8 +78,6 @@ public class TaskNetworkContext extends NetworkContext {
                     for (Task task : list) {
                         DBContext.instance.addOrUpdate(task);
                     }
-                } else {
-                    Log.e(TAG, "onResponse: " + "failure");
                 }
             }
 
@@ -106,18 +105,19 @@ public class TaskNetworkContext extends NetworkContext {
             @Override
             public void onResponse(Call<TaskResponeJson> call, Response<TaskResponeJson> response) {
                 TaskResponeJson taskResponeJson = response.body();
-
+                DBContext.instance.add(task);
+                EventBus.getDefault().post(new NotidataChanged(true));
                 Log.d(TAG, "onResponse: " + taskResponeJson.toString());
             }
 
             @Override
             public void onFailure(Call<TaskResponeJson> call, Throwable t) {
-
+                EventBus.getDefault().post(new SignalOnFailureNetwork(true));
             }
         });
     }
 
-    public void editATask(Task task){
+    public void editATask(final Task task){
         TaskService taskService = retrofit.create(TaskService.class);
         MediaType jsonType = MediaType.parse("application/json");
         String taskJson = (new Gson().toJson(convertTaskResponeJson(task)));
@@ -128,12 +128,14 @@ public class TaskNetworkContext extends NetworkContext {
         creaTaskResponeJsonCall.enqueue(new Callback<TaskResponeJson>() {
             @Override
             public void onResponse(Call<TaskResponeJson> call, Response<TaskResponeJson> response) {
+                DBContext.instance.update(task.getLocal_id(),task.getName(),task.getPaymentPerHour(),task.getColor(),task.isDone());
+                EventBus.getDefault().post(new NotidataChanged(true));
                 Log.d(TAG, "onResponse: "+response.body().toString());
             }
 
             @Override
             public void onFailure(Call<TaskResponeJson> call, Throwable t) {
-                Log.d(TAG, "onFailure: ");
+                EventBus.getDefault().post(new SignalOnFailureNetwork(true));
             }
         });
 
@@ -153,7 +155,7 @@ public class TaskNetworkContext extends NetworkContext {
 
             @Override
             public void onFailure(Call<DeleteTaskReponseJson> call, Throwable t) {
-                Log.d(TAG, "onFailure: ");
+                EventBus.getDefault().post(new SignalOnFailureNetwork(true));
             }
         });
     }

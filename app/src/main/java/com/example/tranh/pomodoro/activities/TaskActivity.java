@@ -111,6 +111,8 @@ public class TaskActivity extends AppCompatActivity
         onReplaceTaskListener();
         if (isNetworkConnected()) {
             DBContext.instance.getDBOnNetwork();
+        }else{
+            Toast.makeText(this, "No Internet Access - You can't add, edit or remove", Toast.LENGTH_SHORT).show();
         }
     }
 
