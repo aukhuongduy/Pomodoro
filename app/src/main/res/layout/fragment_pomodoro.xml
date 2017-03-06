@@ -3,48 +3,56 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="com.example.tranh.pomodoro.fragment.PomodoroFragment">
+    tools:context="com.example.tranh.pomodoro.com.example.pomodoro.fragment.PomodoroFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center">
+        <com.example.pomodoro.layout.SquareLayout
+            android:id="@+id/sl_timerLayout"
+            android:padding="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:indeterminate="false"
+                android:progressDrawable="@drawable/circular_progress_bar"
+                android:background="@drawable/circle_shape"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:max="1500"
+                android:progress="0" />
+            <ImageButton
+                android:id="@+id/ib_play_pause"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:layout_marginTop="120dp"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:background="#00000000"
+                app:srcCompat="@drawable/ic_play_arrow_brown_24px"
+                />
 
-        <ProgressBar
-            android:id="@+id/progressBar"
-            android:layout_width="300dp"
-            android:layout_height="300dp"
-            android:indeterminate="false"
-            android:progressDrawable="@drawable/circular_progress_bar"
-            android:background="@drawable/circle_shape"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:max="1000"
-            android:progress="850" />
+            <TextView
+                android:id="@+id/tv_timer"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@id/ib_play_pause"
+                android:text="25 : 00"
+                android:textSize="36sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
-        <ImageButton
-            android:id="@+id/ib_play_pause"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="120dp"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:background="#00000000"
-            app:srcCompat="@drawable/ic_play_arrow_brown_24px"
-            />
+        </com.example.pomodoro.layout.SquareLayout>
 
-        <TextView
-            android:layout_centerHorizontal="true"
-            android:layout_below="@id/ib_play_pause"
-            android:text="25:00"
-            android:textSize="36sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
 
         <LinearLayout
             android:paddingTop="16dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/progressBar"
+            android:layout_below="@id/sl_timerLayout"
             android:layout_centerHorizontal="true"
             >
 
